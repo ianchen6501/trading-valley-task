@@ -1,32 +1,105 @@
-import { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState } from "react";
+import moment from "moment";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
+import { searchListAPI, getSingleVideoDataAPI } from "../../webAPI";
+import "./YoutubeSearch.css";
 
 function YoutubeSearch() {
+	const [keyword, setKeyword] = useState("");
+	const [videoList, setVideoList] = useState(null);
+	const [videosData, setVideosData] = useState(null);
+	const videoIdUrl = "https://www.youtube.com/watch?v=";
+
+	const getVideosData = async (videoList) => {
+		let dataArray = [];
+		for (let video of videoList) {
+			const data = await getSingleVideoDataAPI(video.id.videoId);
+			dataArray.push(data);
+		}
+		return dataArray;
+	};
+
+	const onFormSubmit = async (e) => {
+		e.preventDefault();
+		const videoDataList = await searchListAPI(keyword);
+		setVideoList(videoDataList);
+		const data = await getVideosData(videoDataList.items);
+		setVideosData(data);
+		setKeyword("");
+	};
+
+	const handleMomentTransfer = (time) => {
+		return moment(time, "YYYYMMDD").fromNow();
+	};
+
 	return (
 		<Container className="p-5">
-			<Form>
+			<Form id="searchForm" onSubmit={(e) => onFormSubmit(e)}>
 				<Row>
-					<Col xs="8">
+					<Col xs="10">
 						<Form.Group>
-							<Form.Control type="text" placeholder="Type here."></Form.Control>
+							<Form.Control
+								type="text"
+								placeholder="Type here."
+								onChange={(e) => setKeyword(e.target.value)}
+								value={keyword}
+							></Form.Control>
 						</Form.Group>
 					</Col>
-					<Col>
-						<Button className="primary">Submit</Button>
+					<Col xs="2">
+						<Button type="submit" className="primary">
+							Submit
+						</Button>
 					</Col>
 				</Row>
 			</Form>
-			<Row>
-				<Card className="mt-5 d-flex flex-row">
-					<Card.Body className="p-2"></Card.Body>
-					<Card.Body className="p-2">
-						<Card.Title>Title</Card.Title>
-						<Card.Subtitle>Publisher</Card.Subtitle>
-						<Card.Text>info</Card.Text>
-					</Card.Body>
-				</Card>
-			</Row>
+			{videosData &&
+				videosData.map((item, index) => {
+					return (
+						<Row key={index}>
+							<Card className="mt-5 d-flex flex-row">
+								<Col xs="6">
+									<Card.Body className="pt-5 pb-5">
+										<a
+											href={videoIdUrl.concat(item.items[0].id)}
+											target="_blank"
+											rel="noreferrer"
+										>
+											<img
+												className="videoImage"
+												src={item.items[0].snippet.thumbnails.high.url}
+												alt="img"
+											></img>
+										</a>
+									</Card.Body>
+								</Col>
+								<Col xs="6">
+									<Card.Body className="pt-5 pb-5">
+										<Card.Title className="fw-bold">
+											{item.items[0].snippet.title}
+										</Card.Title>
+										<Card.Subtitle className="mb-2 fw-bold">
+											<span>
+												觀看次數: {item.items[0].statistics.viewCount}．
+											</span>
+											<span>
+												{handleMomentTransfer(
+													item.items[0].snippet.publishedAt
+												)}
+											</span>
+										</Card.Subtitle>
+										<Card.Subtitle className="mb-2 fw-bold">
+											{item.items[0].snippet.channelTitle}
+										</Card.Subtitle>
+										<Card.Text className="videoInfo">
+											{item.items[0].snippet.description}
+										</Card.Text>
+									</Card.Body>
+								</Col>
+							</Card>
+						</Row>
+					);
+				})}
 		</Container>
 	);
 }
