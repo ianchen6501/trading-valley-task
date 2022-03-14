@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import moment from "moment";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { searchListAPI, getSingleVideoDataAPI } from "../../webAPI";
 import "./YoutubeSearch.css";
@@ -9,14 +10,14 @@ function YoutubeSearch() {
 	const [videosData, setVideosData] = useState(null);
 	const videoIdUrl = "https://www.youtube.com/watch?v=";
 
-	async function getVideosData(videoList) {
+	const getVideosData = async (videoList) => {
 		let dataArray = [];
 		for (let video of videoList) {
 			const data = await getSingleVideoDataAPI(video.id.videoId);
 			dataArray.push(data);
 		}
 		return dataArray;
-	}
+	};
 
 	const onFormSubmit = async (e) => {
 		e.preventDefault();
@@ -24,6 +25,11 @@ function YoutubeSearch() {
 		setVideoList(videoDataList);
 		const data = await getVideosData(videoDataList.items);
 		setVideosData(data);
+		setKeyword("");
+	};
+
+	const handleMomentTransfer = (time) => {
+		return moment(time, "YYYYMMDD").fromNow();
 	};
 
 	return (
@@ -53,7 +59,7 @@ function YoutubeSearch() {
 						<Row key={index}>
 							<Card className="mt-5 d-flex flex-row">
 								<Col xs="6">
-									<Card.Body className="pt-2 pb-2">
+									<Card.Body className="pt-5 pb-5">
 										<a
 											href={videoIdUrl.concat(item.items[0].id)}
 											target="_blank"
@@ -68,15 +74,26 @@ function YoutubeSearch() {
 									</Card.Body>
 								</Col>
 								<Col xs="6">
-									<Card.Body className="pt-2 pb-2">
-										<Card.Title>{item.items[0].snippet.title}</Card.Title>
-										<Card.Subtitle>
-											<span>{item.items[0].snippet.channelTitle}</span>
+									<Card.Body className="pt-5 pb-5">
+										<Card.Title className="fw-bold">
+											{item.items[0].snippet.title}
+										</Card.Title>
+										<Card.Subtitle className="mb-2 fw-bold">
 											<span>
-												觀看次數: {item.items[0].statistics.viewCount}
+												觀看次數: {item.items[0].statistics.viewCount}．
+											</span>
+											<span>
+												{handleMomentTransfer(
+													item.items[0].snippet.publishedAt
+												)}
 											</span>
 										</Card.Subtitle>
-										<Card.Text>info</Card.Text>
+										<Card.Subtitle className="mb-2 fw-bold">
+											{item.items[0].snippet.channelTitle}
+										</Card.Subtitle>
+										<Card.Text className="videoInfo">
+											{item.items[0].snippet.description}
+										</Card.Text>
 									</Card.Body>
 								</Col>
 							</Card>

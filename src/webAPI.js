@@ -3,7 +3,7 @@ const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = "https://www.googleapis.com/youtube/v3";
 
 const parameters = {
-	listQuery: `/search?q={keyword}&maxResults=4&key=${apiKey}&part=snippet`,
+	listQuery: `/search?q={keyword}&maxResults=4&key=${apiKey}&type=video&part=snippet`,
 	singleVideoQuery: `/videos?id={videoId}&key=${apiKey}&part=snippet,statistics`,
 };
 
