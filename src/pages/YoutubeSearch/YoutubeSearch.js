@@ -9,6 +9,7 @@ function YoutubeSearch() {
 	const [videoList, setVideoList] = useState(null);
 	const [videosData, setVideosData] = useState(null);
 	const videoIdUrl = "https://www.youtube.com/watch?v=";
+	const channelIdUrl = "https://www.youtube.com/channel/";
 
 	const getVideosData = async (videoList) => {
 		let dataArray = [];
@@ -24,12 +25,28 @@ function YoutubeSearch() {
 		const videoDataList = await searchListAPI(keyword);
 		setVideoList(videoDataList);
 		const data = await getVideosData(videoDataList.items);
+		console.log("[DEBUG] data", data);
 		setVideosData(data);
 		setKeyword("");
 	};
 
 	const handleMomentTransfer = (time) => {
 		return moment(time, "YYYYMMDD").fromNow();
+	};
+
+	const handleRedirectUrl = (type, id) => {
+		let url;
+		switch (type) {
+			case "video":
+				url = videoIdUrl.concat(id);
+				break;
+			case "channel":
+				url = channelIdUrl.concat(id);
+				break;
+			default:
+				break;
+		}
+		return url;
 	};
 
 	return (
@@ -61,7 +78,7 @@ function YoutubeSearch() {
 								<Col xs="6">
 									<Card.Body className="pt-5 pb-5">
 										<a
-											href={videoIdUrl.concat(item.items[0].id)}
+											href={handleRedirectUrl("video", item.items[0].id)}
 											target="_blank"
 											rel="noreferrer"
 										>
@@ -75,9 +92,15 @@ function YoutubeSearch() {
 								</Col>
 								<Col xs="6">
 									<Card.Body className="pt-5 pb-5">
-										<Card.Title className="fw-bold">
-											{item.items[0].snippet.title}
-										</Card.Title>
+										<a
+											href={handleRedirectUrl("video", item.items[0].id)}
+											target="_blank"
+											rel="noreferrer"
+										>
+											<Card.Title className="fw-bold">
+												{item.items[0].snippet.title}
+											</Card.Title>
+										</a>
 										<Card.Subtitle className="mb-2 fw-bold">
 											<span>
 												觀看次數: {item.items[0].statistics.viewCount}．
@@ -88,9 +111,18 @@ function YoutubeSearch() {
 												)}
 											</span>
 										</Card.Subtitle>
-										<Card.Subtitle className="mb-2 fw-bold">
-											{item.items[0].snippet.channelTitle}
-										</Card.Subtitle>
+										<a
+											href={handleRedirectUrl(
+												"channel",
+												item.items[0].snippet.channelId
+											)}
+											target="_blank"
+											rel="noreferrer"
+										>
+											<Card.Subtitle className="mb-2 fw-bold">
+												{item.items[0].snippet.channelTitle}
+											</Card.Subtitle>
+										</a>
 										<Card.Text className="videoInfo">
 											{item.items[0].snippet.description}
 										</Card.Text>
