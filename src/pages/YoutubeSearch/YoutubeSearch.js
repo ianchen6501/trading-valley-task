@@ -25,7 +25,6 @@ function YoutubeSearch() {
 		const videoDataList = await searchListAPI(keyword);
 		setVideoList(videoDataList);
 		const data = await getVideosData(videoDataList.items);
-		console.log("[DEBUG] data", data);
 		setVideosData(data);
 		setKeyword("");
 	};
@@ -35,7 +34,7 @@ function YoutubeSearch() {
 	};
 
 	const handleRedirectUrl = (type, id) => {
-		let url;
+		let url = "";
 		switch (type) {
 			case "video":
 				url = videoIdUrl.concat(id);
