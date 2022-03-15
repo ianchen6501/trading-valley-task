@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/trading-valley-task/static/css/main.db797cae.css",
-    "main.js": "/trading-valley-task/static/js/main.28f847b8.js",
+    "main.css": "/trading-valley-task/static/css/main.5a8c3b3a.css",
+    "main.js": "/trading-valley-task/static/js/main.ea09cd3c.js",
     "static/js/787.0fb9dd54.chunk.js": "/trading-valley-task/static/js/787.0fb9dd54.chunk.js",
     "index.html": "/trading-valley-task/index.html",
-    "main.db797cae.css.map": "/trading-valley-task/static/css/main.db797cae.css.map",
-    "main.28f847b8.js.map": "/trading-valley-task/static/js/main.28f847b8.js.map",
+    "main.5a8c3b3a.css.map": "/trading-valley-task/static/css/main.5a8c3b3a.css.map",
+    "main.ea09cd3c.js.map": "/trading-valley-task/static/js/main.ea09cd3c.js.map",
     "787.0fb9dd54.chunk.js.map": "/trading-valley-task/static/js/787.0fb9dd54.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.db797cae.css",
-    "static/js/main.28f847b8.js"
+    "static/css/main.5a8c3b3a.css",
+    "static/js/main.ea09cd3c.js"
   ]
 }
